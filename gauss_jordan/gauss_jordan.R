@@ -16,9 +16,6 @@ n <- as.numeric(readline("行列の次数は?:"))
 A <- matrix(0,n,n)
 Ab <- matrix(0,n,n+1)
 
-#opframe <- data.frame(output)
-#opframe <- edit(opframe)
-
 print("係数行列Aをカンマ区切りで入力")
 for(i in 1:n){
 	s <- sprintf("%d行目",i)
