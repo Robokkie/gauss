@@ -29,24 +29,26 @@ b <- readstring()
 Ab[1:n,1:n] <- A
 Ab[,n+1] <- b
 
+# 前進消去により上三角行列に変換
+# 上から順に処理（N回）
 for(i in 1:n){
 	irekae(Ab,i)
 	p <- Ab[i,i]
 	if(abs(p)<1.0e-6){
-		print("一意解を持ちません")
-		q()
+		stop("一意解を持ちません")
 	}
-	#第i行を(i,i)成分で除算
+	#第i行を(i,i)成分で除算（N+1-i回の除算）
 	Ab[i,] <- Ab[i,]/Ab[i,i]
 
-	#第i行より下の行は
-	j<-i+1
+	#第i行を使って，下方の行を掃き出す（N-i回の乗算）
+	j <- i+1
 	while(j<=n){
 		Ab[j,] <- Ab[j,] - Ab[j,i]*Ab[i,]
 		j<-j+1
 	}
 }
 
+# 逆進代入により解を求める
 x <- numeric(n)
 for(i in n:1){
 	s<-0

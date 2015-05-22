@@ -11,6 +11,7 @@ irekae <- function(a,col){
 	a[col,] <- temp
 }
 
+#入力用部分
 n <- as.numeric(readline("行列の次数は?:"))
 
 A <- matrix(0,n,n)
@@ -29,6 +30,7 @@ b <- readstring()
 Ab[1:n,1:n] <- A
 Ab[,n+1] <- b
 
+#掃き出し
 for(i in 1:n){
 	irekae(a,i)
 	p <- Ab[i,i]
@@ -39,7 +41,7 @@ for(i in 1:n){
 	#第i行を(i,i)成分で除算
 	Ab[i,] <- Ab[i,]/Ab[i,i]
 
-	#第i行より下の行は
+	#第i行を使って他の行から掃き出しを行う
 	for(j in 1:n){
 		if(j==i){
 			j <- j+1
