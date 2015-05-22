@@ -30,18 +30,17 @@ b <- readstring()
 Ab[1:n,1:n] <- A
 Ab[,n+1] <- b
 
-#掃き出し
+#掃き出し（n行に処理）
 for(i in 1:n){
-	irekae(a,i)
+	irekae(Ab,i)
 	p <- Ab[i,i]
 	if(abs(p)<1.0e-6){
-		print("一意解を持ちません")
-		q()
+		stop("一意解を持ちません")
 	}
-	#第i行を(i,i)成分で除算
+	#第i行を(i,i)成分で除算（n-i回）
 	Ab[i,] <- Ab[i,]/Ab[i,i]
-
-	#第i行を使って他の行から掃き出しを行う
+	
+	#第i行を使って他の行から掃き出しを行う（n-1行に処理*n-i列に処理）
 	for(j in 1:n){
 		if(j==i){
 			j <- j+1
@@ -53,8 +52,3 @@ for(i in 1:n){
 }
 
 x <- Ab[,n+1]
-
-
-output <- data.frame(a)
-output
-write.table(output, "output.csv", quote=F, sep=",", col.names=F, append=F)

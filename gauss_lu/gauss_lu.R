@@ -31,10 +31,11 @@ b <- readstring()
 Ab[1:n,1:n] <- A
 Ab[,n+1] <- b
 
-# ガウスの消去法によるLU分解
+# ガウスの消去法によるLU分解（n行に処理）
 l <- diag(n)
 u <- A
 
+t <- proc.time()
 for(i in 1:n){
 	l[,i] <- u[,i]
 	
@@ -43,16 +44,17 @@ for(i in 1:n){
 	if(abs(p)<1.0e-6){
 		stop("一意解を持ちません")
 	}
-	#第i行を(i,i)成分で除算
+	#第i行を(i,i)成分で除算（n-i+1列に処理）
 	u[i,] <- u[i,]/u[i,i]
 
-	#第i行より下の行は
+	#第i行を使って下の行からの掃き出しを行う（n-i行に処理*n-i列に処理）
 	j<-i+1
 	while(j<=n){
 		u[j,] <- u[j,] - u[j,i]*u[i,]
 		j<-j+1
 	}
 }
+t1 <- proc.time() - t
 # Lの上三角成分を捨てる
 l[upper.tri(l)] <- 0
 
@@ -60,14 +62,17 @@ l[upper.tri(l)] <- 0
 # 処理用にlをコピー
 lt <- l
 
-# 前進代入によるyの特定(Ly=b)
+# 前進代入によるyの特定(Ly=b)（n行に処理）
 t <- proc.time()
 y <- numeric(n)
+# （n回処理）
 for(i in 1:n){
 	s<-0
 	b[i] <- b[i]/lt[i,i]
+	#n-i列に処理
 	lt[i,] <- lt[i,]/lt[i,i]
 	j<-i-1
+	# 前進代入（n-i列に処理）
 	while(j>=1){
 		s <- s + lt[i,j]*y[j]
 		j <- j-1
@@ -77,9 +82,11 @@ for(i in 1:n){
 
 # 逆進代入によるxの特定(Ux=y)
 x <- numeric(n)
+# （n回処理）
 for(i in n:1){
 	s<-0
 	j<-i+1
+	# n-i列に処理
 	while(j<=n){
 		s <- s + u[i,j]*x[j]
 		j <- j+1
